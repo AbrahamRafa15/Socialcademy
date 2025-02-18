@@ -12,7 +12,7 @@ struct MainTabView: View {
         TabView {
             PostsList()
                 .tabItem { 
-                    Label("Posts", systemImage: "heart")
+                    Label("Posts", systemImage: "list.dash")
                 }
             PostsList(viewModel: PostViewModel(filter: .favorites))
                 .tabItem {

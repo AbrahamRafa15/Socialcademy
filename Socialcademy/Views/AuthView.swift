@@ -30,16 +30,18 @@ struct CreateAccountForm: View {
     
     var body: some View {
         Form {
-            TextField("Name", text: $viewModel.name)
-            TextField("Email", text: $viewModel.email)
-            SecureField("Password", text: $viewModel.password)
+            TextField("Name", text: $viewModel.name).textContentType(.name).textInputAutocapitalization(.words)
+            TextField("Email", text: $viewModel.email).textContentType(.emailAddress).textInputAutocapitalization(.never)
+            SecureField("Password", text: $viewModel.password).textContentType(.newPassword)
         }
         footer: {
             Button("Create Account", action: viewModel.submit).buttonStyle(.primary)
         }
-        .navigationTitle("Create Account")
+        .alert("Cannot Create Account", error: $viewModel.error)
         .onSubmit(viewModel.submit)
+        .disabled(viewModel.isWorking)
     }
+        
 }
 
 struct SignInForm<Footer: View>: View {
@@ -47,57 +49,40 @@ struct SignInForm<Footer: View>: View {
     @ViewBuilder let footer: () -> Footer
     
     var body: some View{
-        Form{
-            TextField("Email", text: $viewModel.email).textInputAutocapitalization(.none)
+        Form {
+            TextField("Email", text: $viewModel.email).textContentType(.emailAddress).textInputAutocapitalization(.never)
             SecureField("Password", text: $viewModel.password).textContentType(.password)
-        }
-        footer: {
+        } footer: {
             Button("Sign In", action: viewModel.submit).buttonStyle(.primary)
             footer()
                 .padding()
         }
+        .alert("Cannot Sign In", error: $viewModel.error)
         .onSubmit(viewModel.submit)
+        .disabled(viewModel.isWorking)
     }
 }
 
-struct Form<Content: View, Footer: View>: View {
-    @ViewBuilder let content: () -> Content
+struct Form<Fields: View, Footer: View>: View {
+    @ViewBuilder let fields: () -> Fields
     @ViewBuilder let footer: () -> Footer
     
     var body: some View {
         VStack {
             Text("Socialcademy")
                 .font(.title.bold())
-            content()
+            fields()
                 .padding()
                 .background(Color.secondary.opacity(0.15))
                 .clipShape(RoundedRectangle(cornerRadius: 10))
             footer()
-            //Button("Sign In", action: dismiss.callAsFunction)
-                .padding()
-
         }
         .toolbar(.hidden)
         .padding()
     }
 }
 
-struct PrimaryButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .padding()
-            .frame(maxWidth: .infinity)
-            .foregroundStyle(.white)
-            .background(Color.accentColor)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-    }
-}
 
-extension ButtonStyle where Self == PrimaryButtonStyle {
-    static var primary: PrimaryButtonStyle {
-        PrimaryButtonStyle()
-    }
-}
 
 #Preview {
     AuthView()

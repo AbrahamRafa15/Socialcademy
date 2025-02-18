@@ -17,6 +17,7 @@ class AuthViewModel: ObservableObject {
         authService.$isAuthenticated.assign(to: &$isAuthenticated)
     }
     
+    
     func makeSignInViewModel() -> SignInViewModel {
         return SignInViewModel(action: authService.signIn(email:password:))
     }
