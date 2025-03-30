@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PostsList: View {
     
-    @StateObject var viewModel = PostViewModel()
+    @StateObject var viewModel: PostViewModel
     @State private var searchText = ""
     @State private var showNewPostForm = false
     
@@ -24,11 +24,14 @@ struct PostsList: View {
                 case .empty:
                     EmptyListView (title: "No Posts", message: "There aren't any posts yet.")
                 case let .loaded(posts):
-                    List(posts) {
-                        post in
-                        if searchText.isEmpty || post.contains(searchText) {
-                            PostRow(viewModel: viewModel.makePostRowViewModel(for: post))
-                                                    }
+                    ScrollView {
+                        ForEach(posts) {
+                            post in
+                            if searchText.isEmpty || post.contains(searchText) {
+                                PostRow(viewModel: viewModel.makePostRowViewModel(for: post))
+                                
+                            }
+                        }
                     }
                     .animation(.default, value: posts)
                     .searchable(text: $searchText)
@@ -45,7 +48,7 @@ struct PostsList: View {
             }
             
             .sheet(isPresented: $showNewPostForm) {
-                NewPostForm(createAction: viewModel.makeCreateAction())
+                NewPostForm(viewModel: viewModel.makeNewPostViewModel())
             }
         }
         .onAppear {
@@ -57,7 +60,7 @@ struct PostsList: View {
 }
 
 #Preview {
-    PostsList()
+    //PostsList()
 }
 
 #if DEBUG

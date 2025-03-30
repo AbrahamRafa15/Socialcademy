@@ -13,7 +13,7 @@ import Foundation
 class PostViewModel: ObservableObject {
     
     enum Filter {
-        case all, favorites
+        case all, author(User), favorites
     }
     
     @Published var posts: Loadable<[Post]> = .loading
@@ -24,38 +24,42 @@ class PostViewModel: ObservableObject {
         switch filter{
         case .all:
             return "Posts"
+        case let .author(author):
+            return "\(author.name)'s Posts"
         case .favorites:
             return "Favorites"
         }
     }
     
-    init(filter: Filter = .all ,postRepository: PostRepositoryProtocol = PostRepository()){
+    init(filter: Filter = .all ,postRepository: PostRepositoryProtocol){
         self.filter = filter
         self.postRepository = postRepository
     }
     
     func makePostRowViewModel(for post: Post) -> PostRowViewModel {
-        return PostRowViewModel(post: post, deleteAction: {
+        let deleteAction = {
             [weak self] in
             try await self?.postRepository.delete(post)
             self?.posts.value?.removeAll {
                 $0 == post
             }
-        }, favoriteAction: {
+        }
+        let favoriteAction = {
             [weak self] in
-                let newValue = !post.isFavorite
-                try await newValue ? self?.postRepository.favorite(post): self?.postRepository.unfavorite(post)
-                guard let i = self?.posts.value?.firstIndex(of: post) else {return }
-                self?.posts.value?[i].isFavorite = newValue
-        })
+            let newValue = !post.isFavorite
+            try await newValue ? self?.postRepository.favorite(post) : self?.postRepository.unfavorite(post)
+            guard let i = self?.posts.value?.firstIndex(of: post) else { return }
+            self?.posts.value?[i].isFavorite = newValue
+        }
+        return PostRowViewModel(post: post, deleteAction: postRepository.canDelete(post) ? deleteAction: nil, favoriteAction: favoriteAction)
     }
     
-    func makeCreateAction() -> NewPostForm.CreateAction {
-        return { [weak self] post in
-            try await self?.postRepository.create(post)
-            self?.posts.value?.insert(post, at: 0)
-        }
-    }
+//    func makeCreateAction() -> NewPostForm {
+//        return { [weak self] post in
+//            try await self?.postRepository.create(post)
+//            self?.posts.value?.insert(post, at: 0)
+//        }
+//    }
     
     func fetchPosts() {
         Task {
@@ -69,6 +73,17 @@ class PostViewModel: ObservableObject {
         }
     }
     
+    func makeNewPostViewModel() -> FormViewModel<Post> {
+        return FormViewModel(
+            value: Post(title: "", content: "", author: postRepository.user),
+            action: {
+                [weak self] post in
+                try await self?.postRepository.create(post)
+                self?.posts.value?.insert(post, at: 0)
+            }
+        )
+    }
+    
 }
 
 
@@ -77,6 +92,8 @@ private extension PostRepositoryProtocol {
         switch filter{
         case .all:
             return try await fetchAllPosts()
+        case let .author(author):
+            return try await fetchPosts(by: author)
         case .favorites:
             return try await fetchFavoritePosts()
         }

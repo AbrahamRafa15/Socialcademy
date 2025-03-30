@@ -15,7 +15,10 @@ struct EmptyListView: View {
     
     var body: some View {
         VStack (alignment: .center, spacing: 10) {
-            Text(title).font(.title2).fontWeight(.semibold).foregroundStyle(Color.primary)
+            Text(title)
+                .font(.title2)
+                .fontWeight(.semibold)
+                .foregroundStyle(Color.primary)
             Text(message)
             if let retryAction = retryAction {
                 Button (action: retryAction) {

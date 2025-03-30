@@ -16,10 +16,13 @@ protocol PostRepositoryProtocol {
     func favorite(_ post: Post) async throws
     func unfavorite(_ post: Post) async throws
     func fetchFavoritePosts() async throws -> [Post]
+    func fetchPosts(by author: User) async throws -> [Post]
+    var user: User {get}
 }
 
 struct PostRepository: PostRepositoryProtocol {
-    let postsReference = Firestore.firestore().collection("posts_v1")
+    let postsReference = Firestore.firestore().collection("posts_v2")
+    let user: User
     
     func create(_ post: Post) async throws {
         let document = postsReference.document(post.id.uuidString)
@@ -34,6 +37,10 @@ struct PostRepository: PostRepositoryProtocol {
         return try await fetchPosts(from: postsReference.whereField("isFavorite", isEqualTo: true))
     }
     
+    func fetchPosts(by author: User) async throws -> [Post] {
+        return try await fetchPosts(from: postsReference.whereField("author.id", isEqualTo: author.id))
+    }
+    
     private func fetchPosts(from query: Query) async throws -> [Post] {
         let snapshot = try await query.order(by: "timestamp", descending: true).getDocuments()
         return snapshot.documents.compactMap {
@@ -43,6 +50,7 @@ struct PostRepository: PostRepositoryProtocol {
     }
     
     func delete(_ post: Post) async throws {
+        precondition(canDelete(post))
         let document = postsReference.document(post.id.uuidString)
         try await document.delete()
     }
@@ -80,8 +88,15 @@ private extension DocumentReference {
     }
 }
 
+extension PostRepositoryProtocol {
+    func canDelete(_ post: Post) -> Bool {
+        post.author.id == user.id
+    }
+}
+
 #if DEBUG
 struct PostRepositoryStub: PostRepositoryProtocol {
+    var user = User.testUser
     let state: Loadable<[Post]>
     
     func fetchAllPosts() async throws -> [Post] {
@@ -106,6 +121,10 @@ struct PostRepositoryStub: PostRepositoryProtocol {
     
     func unfavorite(_ post: Post) async throws {
         
+    }
+    
+    func fetchPosts(by author: User) async throws -> [Post] {
+        return try await state.simulate()
     }
     
 }

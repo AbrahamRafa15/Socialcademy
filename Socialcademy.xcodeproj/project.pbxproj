@@ -30,6 +30,8 @@
 		0BCC3CD02C49CB570084F073 /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCC3CCF2C49CB570084F073 /* AuthView.swift */; };
 		0BCC3CD22C49CF740084F073 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCC3CD12C49CF740084F073 /* ProfileView.swift */; };
 		0BCC3CD42C49D48D0084F073 /* FormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCC3CD32C49D48D0084F073 /* FormViewModel.swift */; };
+		0BD7674D2D8C95170076921F /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD7674C2D8C95120076921F /* User.swift */; };
+		0BD7674F2D8C9E690076921F /* ViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD7674E2D8C9E630076921F /* ViewModelFactory.swift */; };
 		0BDF68242C46F68700E635EB /* Loadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDF68232C46F68700E635EB /* Loadable.swift */; };
 		0BDF68272C4703B500E635EB /* EmptyListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDF68262C4703B500E635EB /* EmptyListView.swift */; };
 /* End PBXBuildFile section */
@@ -55,6 +57,8 @@
 		0BCC3CCF2C49CB570084F073 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
 		0BCC3CD12C49CF740084F073 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		0BCC3CD32C49D48D0084F073 /* FormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormViewModel.swift; sourceTree = "<group>"; };
+		0BD7674C2D8C95120076921F /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		0BD7674E2D8C9E630076921F /* ViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelFactory.swift; sourceTree = "<group>"; };
 		0BDF68232C46F68700E635EB /* Loadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loadable.swift; sourceTree = "<group>"; };
 		0BDF68262C4703B500E635EB /* EmptyListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyListView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -149,6 +153,7 @@
 		0B37771D2C45E91700399F03 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				0BD7674C2D8C95120076921F /* User.swift */,
 				0B37771E2C45E93900399F03 /* Post.swift */,
 			);
 			path = Models;
@@ -157,6 +162,7 @@
 		0B3777262C46059F00399F03 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				0BD7674E2D8C9E630076921F /* ViewModelFactory.swift */,
 				0BCC3CCD2C49C7EE0084F073 /* AuthViewModel.swift */,
 				0BCC3CD32C49D48D0084F073 /* FormViewModel.swift */,
 				0B58A0A12C487F9300F582AF /* PostRowViewModel.swift */,
@@ -291,11 +297,13 @@
 				0BDF68242C46F68700E635EB /* Loadable.swift in Sources */,
 				0B3777212C45EA6400399F03 /* PostsList.swift in Sources */,
 				0BCC3CCE2C49C7EE0084F073 /* AuthViewModel.swift in Sources */,
+				0BD7674F2D8C9E690076921F /* ViewModelFactory.swift in Sources */,
 				0BCC3CD02C49CB570084F073 /* AuthView.swift in Sources */,
 				0B3777252C45FCE600399F03 /* NewPostForm.swift in Sources */,
 				0BCC3CD42C49D48D0084F073 /* FormViewModel.swift in Sources */,
 				0BDF68272C4703B500E635EB /* EmptyListView.swift in Sources */,
 				0B58A0A42C48C8F100F582AF /* MainTabView.swift in Sources */,
+				0BD7674D2D8C95170076921F /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
